@@ -40,9 +40,9 @@ set tabstop=4                        " Interpret a tab as 4 spaces
 set tags=/tags;./tags;/,tags;        " Is this optimal? maybe direct project root first, than tag back relay
 set visualbell                       " Instead of beeping, induce seizures by screen flashing
 set undofile                         " Persistent undo, across sessions
-set directory=$LOCALAPPDATA\nvim-data\swap            " keep swap files in a special directory
-set backupdir=$LOCALAPPDATA\nvim-data\backup            " keep backup files in a special directory
-set undodir=$LOCALAPPDATA\nvim-data\undo           " keep undo files in a special directory
+let &directory = stdpath("data") . '/swap'            " keep swap files in a special directory
+let &backupdir = stdpath("data") . '/backup'            " keep backup files in a special directory
+let &undodir   = stdpath("data") . '/undo'           " keep undo files in a special directory
 set linebreak                        " Visually wrap characters at the word boundary (the wrap that happens when you size a window to small)
 set gdefault                         " switch %s/{pattern}/{pattern} with %s/{pattern/{pattern}/g, since i never want to replace just the first match on each line. hopefully this won't mess with plugins
 set undolevels=50000                 " Save a lot of file changes for undo

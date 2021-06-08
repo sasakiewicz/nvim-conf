@@ -63,7 +63,17 @@ nnoremap <silent> <C-d> :q<CR>
 
 nnoremap <silent> <leader>/ :nohlsearch<CR>
 
-nnoremap <silent> <Enter> :w
+
+nnoremap <silent> <Enter> :w<CR>
+
+" Yank / Cut / Paste
+" use register 0 which contains the last yanked text
+" does not include last yank, change, delete, overwrite...
+noremap <Leader>p "0p
+noremap <Leader>P "0P
+vnoremap <Leader>p "0p
+
+nnoremap <silent> <Enter> :w<CR>
 
 "
 " Info
