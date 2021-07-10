@@ -1,5 +1,4 @@
 let &runtimepath .= ',' . escape(expand("<sfile>:p:h"), '\,')
-echo &runtimepath
 runtime conf-plugins.vim
 runtime conf-plugins-fzf.vim
 runtime conf-plugins-easyalign.vim

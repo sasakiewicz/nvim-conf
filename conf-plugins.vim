@@ -2,7 +2,7 @@
 set nocompatible
 "set runtimepath+=$VIM/  for snipmate auto lookup
 
-call plug#begin(stdpath("data") . '/nvim-data/plugged')
+call plug#begin(stdpath("data") . '/plug')
 
 " Core Plugins {{{
 " Plug 'jaxbot/semantic-highlight.vim'
@@ -18,15 +18,15 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 " Plug 'Shougo/vinarise.vim'
 " Plug 'osyo-manga/vim-brightest'
 " Plug 'nathanaelkane/vim-indent-guides'
-" Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-commentary'
 " Plug 'equalsraf/neovim-gui-shim'
 " Plug 'chrisbra/vim-diff-enhanced'
 " Plug 'easymotion/vim-easymotion'
-" Plug 'tpope/vim-unimpaired'    " each [x & ]x mappings
-" Plug 'justinmk/vim-sneak'
-" Plug 'junegunn/vim-easy-align'
-" Plug 'tpope/vim-endwise'
-" Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'    " each [x & ]x mappings
+Plug 'justinmk/vim-sneak'
+Plug 'junegunn/vim-easy-align'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-surround'
 " Plug 'kien/rainbow_parentheses.vim'
 " Plug 'mh21/errormarker.vim'
 " Plug 'AndrewRadev/splitjoin.vim'
@@ -44,5 +44,17 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 " Plug 'w0ng/vim-hybrid'
 " Plug 'NLKNguyen/papercolor-theme'
 " Plug 'ajh17/spacegray.vim'
+Plug 'preservim/vim-wheel'
+Plug 'mnishz/colorscheme-preview'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'tpope/vim-fugitive'
+Plug 'majutsushi/tagbar'
 
 call plug#end()  " Add plugins to &runtimepath
+
+
+let g:gutentags_cache_dir = stdpath("data") . '/tags'
+let g:gutentags_project_root = ['.repo']
+let g:gutentags_add_default_project_roots = 0
+" set statusline+=%{gutentags#statusline()}
+

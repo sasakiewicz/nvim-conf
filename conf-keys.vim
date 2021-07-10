@@ -1,8 +1,4 @@
 
-nnoremap <silent> <c-j> :wincmd j<CR>
-nnoremap <silent> <c-k> :wincmd k<CR>
-nnoremap <silent> <c-l> :wincmd l<CR>
-nnoremap <silent> <c-h> :wincmd h<CR>
 "
 " Terminal
 tnoremap <Esc> <C-\><C-n>
@@ -39,10 +35,11 @@ inoremap <silent> <C-L> <Right>
 inoremap <silent> <C-H> <Left>
 inoremap <silent> <C-K> <Up>
 inoremap <silent> <C-J> <Down>
-nnoremap <silent> <C-L> <Right>
-nnoremap <silent> <C-H> <Left>
-nnoremap <silent> <C-K> <Up>
-nnoremap <silent> <C-J> <Down>
+
+nnoremap <silent> <C-J> :wincmd j<CR>
+nnoremap <silent> <C-K> :wincmd k<CR>
+nnoremap <silent> <C-L> :wincmd l<CR>
+nnoremap <silent> <C-H> :wincmd h<CR>
 
 "    Remove Inconvenient Keys
 nnoremap <F1> <nop>
@@ -59,6 +56,7 @@ nnoremap k gk
 " Buffer management
 "
 nnoremap <silent> <C-s> :bd<CR>
+nnoremap <silent> <leader>s :BDelete<CR>
 nnoremap <silent> <C-d> :q<CR>
 
 nnoremap <silent> <leader>/ :nohlsearch<CR>
@@ -74,6 +72,41 @@ noremap <Leader>P "0P
 vnoremap <Leader>p "0p
 
 nnoremap <silent> <Enter> :w<CR>
+
+nnoremap <silent> <leader>z :foldmethod=
+
+function! SwitchSource()
+    let b:ext = expand('%:t:e') 
+    let b:file = expand('%:t:r') 
+    let b:head = expand('%:r') 
+    let b:switch = ''
+
+    if b:ext == 'h' || b:ext == 'hpp'
+        if filereadable(b:head . '.c')
+            let b:switch = b:head . '.c'
+        elseif filereadable(b:head . '.cpp')
+            let b:switch = b:head . '.cpp'
+        endif
+
+    elseif b:ext == 'c' || b:ext == 'cpp'
+        if filereadable(b:head . '.h')
+            let b:switch = b:head . '.h'
+        elseif filereadable(b:head . '.hpp')
+            let b:switch = b:head . '.hpp'
+        endif
+    endif
+    if !empty(b:switch)
+        :execute 'edit' b:switch
+    endif
+"    if l:ext =~ '^h$' || l:ext =~ '^hpp$'
+"    :execute(':tselect /\v' . expand('%:t:r') . '\.(cpp\|c)')
+"elseif l:ext =~ '^c$' || l:ext =~ '^cpp$'
+"    :execute(':tselect /\v' . expand('%:t:r') . '\.(hpp\|h)')
+"endif
+endfunction
+nnoremap <leader>[ :call SwitchSource()<CR>
+
+"nnoremap <silent>ZZ :windo q<CR>
 
 "
 " Info

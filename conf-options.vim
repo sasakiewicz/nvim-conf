@@ -57,6 +57,8 @@ set nomore                           "don't pause and display 'More'
 set clipboard+=unnamedplus
 set virtualedit=""
 
+" set mouse=?
+
 "set background=dark " will modify backgrounds, which may have different color for dark and light
 "set nohidden " When I close a tab, remove the buffer
 "set noswapfile "do not make swapfiles, this would be nice, except it is also used to warn users of opening a file up twice in different windows
@@ -65,3 +67,24 @@ set virtualedit=""
 " Note: you can view currently mapped keys with :map, :nmap:, inoremap, and etc
 " Note: vim lists all it's default keys and command in ":help index"
 let mapleader = ' '
+
+if 1
+  set foldenable        " enable folding
+  set foldmethod=syntax " fold based on syntax highlighting
+  set foldlevelstart=99 " start editing with all folds open
+  set fillchars=fold:\  " start editing with all folds open
+
+  " toggle folds
+  nnoremap <leader>f zA
+  vnoremap <leader>f zA
+
+  set foldtext=FoldText()
+  function! FoldText()
+      return '~'
+  endfun
+endif
+
+" Enable spell checking, which is not on by default for commit messages.
+au FileType gitcommit setlocal spell
+" Reset textwidth if you've previously overridden it.
+au FileType gitcommit setlocal textwidth=72

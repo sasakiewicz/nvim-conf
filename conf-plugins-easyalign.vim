@@ -12,3 +12,7 @@ let g:easy_align_delimiters['-'] = { 'pattern': '-' }
 let g:easy_align_delimiters['['] = { 'pattern': '[' }
 let g:easy_align_delimiters['|'] = { 'pattern': '|', 'ignore_groups': ['String'] }
 
+
+vnoremap <leader>at :LiveEasyAlign<CR>
+nnoremap <leader>at :LiveEasyAlign<CR>
+nnoremap <leader>af <esc>vi{==

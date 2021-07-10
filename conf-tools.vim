@@ -16,10 +16,10 @@ command! BuildRun               lua require'tools'.build_run()
 command! BuildClean             lua require'tools'.build_clean()
 command! BuildTerm              lua require'tools'.build_term()
 
-nnoremap <leader>r :ProjectSearchFile<CR>
-nnoremap <leader>ac :ProjectSearchTextWord<CR>
+nnoremap <leader>r :Files<CR>
+nnoremap <leader>ac :exec 'Ag ' . expand('<cword>')<CR>
 nnoremap <expr> <leader>av ':vimgrep' . ' ' . expand('<cword>') . ' ' . '..\' 
-nnoremap <leader>ai :ProjectSearchTextInput<CR>
+nnoremap <leader>ai :Ag 
 nnoremap <leader>p :BuildBuild<CR>
 nnoremap <leader>P :ProjectWindow<CR>
 "nnoremap <leader>P :BuildGtags<CR>
@@ -35,3 +35,4 @@ nnoremap <leader>e :Files %:h<CR>
 nnoremap <leader>k :Windows<CR>
 nnoremap <leader>o :BTags<CR>
 nnoremap <leader>j :Buffer<CR>
+nnoremap <leader>t :TagbarToggle<cr>

@@ -352,15 +352,6 @@ nnoremap <leader>ib a-----------------------------------------------------------
 
 
 
-function! SwitchSource()
-    let l:ext = expand('%:t:e') 
-    if l:ext =~ '^h$' || l:ext =~ '^hpp$'
-    :execute(':tselect /\v' . expand('%:t:r') . '\.(cpp\|c)')
-elseif l:ext =~ '^c$' || l:ext =~ '^cpp$'
-    :execute(':tselect /\v' . expand('%:t:r') . '\.(hpp\|h)')
-endif
-endfunction
-nnoremap <leader>[ :call SwitchSource()<CR>
 
 
 map <silent> <A-f> <Plug>(easymotion-f)
