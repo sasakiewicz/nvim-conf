@@ -50,6 +50,8 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'tpope/vim-fugitive'
 Plug 'majutsushi/tagbar'
 
+Plug 'unblevable/quick-scope'  
+
 call plug#end()  " Add plugins to &runtimepath
 
 
