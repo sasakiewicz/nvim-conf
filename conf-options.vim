@@ -84,7 +84,11 @@ if 1
   endfun
 endif
 
+augroup GitCommit
 " Enable spell checking, which is not on by default for commit messages.
-au FileType gitcommit setlocal spell
+autocmd FileType gitcommit setlocal spell
 " Reset textwidth if you've previously overridden it.
-au FileType gitcommit setlocal textwidth=72
+autocmd FileType gitcommit setlocal textwidth=72
+augroup END
+
+

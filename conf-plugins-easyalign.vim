@@ -10,9 +10,14 @@ let g:easy_align_delimiters['\'] = { 'pattern': '\\' }
 let g:easy_align_delimiters['%'] = { 'pattern': '%' }
 let g:easy_align_delimiters['-'] = { 'pattern': '-' }
 let g:easy_align_delimiters['['] = { 'pattern': '[' }
+let g:easy_align_delimiters['('] = { 'pattern': '(' }
+let g:easy_align_delimiters[':'] = { 'pattern': ':' }
+let g:easy_align_delimiters['?'] = { 'pattern': '?' }
 let g:easy_align_delimiters['|'] = { 'pattern': '|', 'ignore_groups': ['String'] }
+let g:easy_align_delimiters['"'] = { 'pattern': '"', 'ignore_groups': ['String'] }
 
 
-vnoremap <leader>at :LiveEasyAlign<CR>
-nnoremap <leader>at :LiveEasyAlign<CR>
-nnoremap <leader>af <esc>vi{==
+vnoremap <leader>ce :LiveEasyAlign<CR>
+nnoremap <leader>ce :LiveEasyAlign<CR>
+nnoremap <leader>c= :normal {v}<CR> :LiveEasyAlign<CR>
+nnoremap <leader>= <esc>vi{==

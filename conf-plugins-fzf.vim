@@ -19,3 +19,8 @@ command! BDelete call fzf#run(fzf#wrap({
   \ 'sink*': { lines -> s:delete_buffers(lines) },
   \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
 \ }))
+
+"command! -bang -nargs=* Ag
+"  \ call fzf#vim#grep(
+"  \   'ag --column --numbers --noheading --color --smart-case -Q '.shellescape(<q-args>), 1,
+"  \   fzf#vim#with_preview(), <bang>0)

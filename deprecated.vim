@@ -75,7 +75,6 @@ nnoremap <leader>h :History:<CR>
 nnoremap <leader>H :History/<CR>
 
 nnoremap <leader>e :Files %:h<CR>
-nnoremap <leader>k :Windows<CR>
 nnoremap <leader>o :BTags<CR>
 nnoremap <leader>j :Buffer<CR>
 
