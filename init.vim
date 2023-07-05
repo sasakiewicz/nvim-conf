@@ -1,14 +1,346 @@
 let &runtimepath .= ',' . escape(expand("<sfile>:p:h"), '\,')
-runtime conf-plugins.vim
-runtime conf-plugins-fzf.vim
-runtime conf-plugins-easyalign.vim
+
+
+set nocompatible
+"set runtimepath+=$VIM/  for snipmate auto lookup
+
+call plug#begin(stdpath("data") . '/plug')
+
+" Core Plugins {{{
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-emoji'
+"Plug 'junegunn/vim-peekaboo'
+
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
+Plug 'preservim/vim-wheel'
+Plug 'fidian/hexmode'
+Plug 'neovim/nvim-lspconfig'
+Plug 'mfussenegger/nvim-jdtls'
+Plug 'kevinhwang91/nvim-bqf'
+"Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+" Functional
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'    " each [x & ]x mappings
+Plug 'junegunn/vim-easy-align'
+Plug 'justinmk/vim-sneak'
+Plug 'voldikss/vim-floaterm'
+
+Plug 'nvim-lualine/lualine.nvim'
+
+"Plug 'unblevable/quick-scope'  
+Plug 'mcchrish/nnn.vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'sheerun/vim-polyglot'
+
+" Build
+Plug 'mh21/errormarker.vim'
+
+" Git Integration
+Plug 'tpope/vim-fugitive'
+Plug 'mhinz/vim-signify'
+Plug 'junegunn/gv.vim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'sindrets/diffview.nvim'
+Plug 'rbong/vim-flog'
+
+" Colors
+Plug 'flazz/vim-colorschemes' "a enourmous pack of colorschemes
+Plug 'EdenEast/nightfox.nvim'
+Plug 'catppuccin/nvim'
+Plug 'rebelot/kanagawa.nvim'
+Plug 'folke/tokyonight.nvim'
+" Plug 'altercation/vim-colors-solarized'    " Solarized - a Solid Color Scheme
+" Plug '29decibel/codeschool-vim-theme'
+" Plug 'vim-scripts/darktango.vim'
+" Plug 'djjcast/mirodark'
+" Plug 'sjl/badwolf'
+" Plug 'ciaranm/inkpot'
+" Plug 'NLKNguyen/papercolor-theme'
+" Plug 'ajh17/spacegray.vim'
+
+" Plug 'w0ng/vim-hybrid'
+
+
+" Utility
+Plug 'majutsushi/tagbar'
+Plug 'justinmk/vim-dirvish'
+"Plug 'ludovicchabant/vim-gutentags'
+Plug 'will133/vim-dirdiff'
+Plug 'voldikss/vim-translator'
+Plug 'nvim-tree/nvim-tree.lua'
+" Plug 'jaxbot/semantic-highlight.vim'
+" Plug 'junegunn/vim-journal'
+" Plug 'glidenote/memolist.vim'
+" Plug 'sjl/gundo.vim'
+" Plug 'Shougo/vinarise.vim'
+" Plug 'osyo-manga/vim-brightest'
+" Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'equalsraf/neovim-gui-shim'
+" Plug 'chrisbra/vim-diff-enhanced'
+" Plug 'easymotion/vim-easymotion'
+" Plug 'kien/rainbow_parentheses.vim'
+" Plug 'AndrewRadev/splitjoin.vim'
+" Plug 'rking/ag.vim'
+" Plug 'PProvost/vim-ps1'
+"Plug 'SirVer/ultisnips'
+"Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
+"
+" Plug 'mnishz/colorscheme-preview'
+"
+" Plug 'paulkass/jira-vim'
+
+" Octo
+Plug 'nvim-lua/plenary.nvim',
+Plug 'nvim-telescope/telescope.nvim',
+Plug 'nvim-telescope/telescope-project.nvim',
+Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'kyazdani42/nvim-web-devicons',
+Plug 'pwntester/octo.nvim'
+
+Plug 'simrat39/symbols-outline.nvim'
+Plug 'mfussenegger/nvim-dap'
+Plug 'mfussenegger/nvim-jdtls'
+
+let g:translate_source_lang = 'zh'
+let g:translate_target_lang = 'en'
+
+call plug#end()  " Add plugins to &runtimepath
+
+
+
+        let errormarker_errortext = "EE"
+        let errormarker_warningtext = "WW"
+        let errormarker_warningtypes = "wW"
+        let errormarker_errorgroup = "ErrorMsg"
+        let errormarker_warninggroup = "Todo"
+
+let g:gutentags_cache_dir = stdpath("data") . '/tags'
+let g:gutentags_project_root = ['.repo']
+let g:gutentags_add_default_project_roots = 0
+" set statusline+=%{gutentags#statusline()}
+
+let g:cpp_no_function_highlight = 1
+
+
+
+function! s:CloseGit()
+	for l:winnr in range(1, winnr('$'))
+		if !empty(getwinvar(l:winnr, 'fugitive_status'))
+			execute l:winnr.'close'
+        endif
+	endfor
+endfunction
+
+function! SwitchSource()
+    let b:ext = expand('%:t:e') 
+    let b:file = expand('%:t:r') 
+    let b:head = expand('%:r') 
+    let b:switch = ''
+
+    if b:ext == 'h' || b:ext == 'hpp'
+        if filereadable(b:head . '.c')
+            let b:switch = b:head . '.c'
+        elseif filereadable(b:head . '.cpp')
+            let b:switch = b:head . '.cpp'
+        endif
+
+    elseif b:ext == 'c' || b:ext == 'cpp'
+        if filereadable(b:head . '.h')
+            let b:switch = b:head . '.h'
+        elseif filereadable(b:head . '.hpp')
+            let b:switch = b:head . '.hpp'
+        endif
+    endif
+    if !empty(b:switch)
+        :execute 'edit' b:switch
+    endif
+"    if l:ext =~ '^h$' || l:ext =~ '^hpp$'
+"    :execute(':tselect /\v' . expand('%:t:r') . '\.(cpp\|c)')
+"elseif l:ext =~ '^c$' || l:ext =~ '^cpp$'
+"    :execute(':tselect /\v' . expand('%:t:r') . '\.(hpp\|h)')
+"endif
+endfunction
+
+autocmd filetype c,cpp,h,hpp setlocal commentstring=//\ %s
+
+""""""""""""""""""""""""""" from conf-plugins-fzf
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'bat --style=numbers --color=always --line-range :500 {}']}, <bang>0)
+
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BDelete call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
+
+"command! -bang -nargs=* Ag
+"  \ call fzf#vim#grep(
+"  \   'ag --column --numbers --noheading --color --smart-case -Q '.shellescape(<q-args>), 1,
+"  \   fzf#vim#with_preview(), <bang>0)
+
+
+"""""""""""""""""""""""""""""" from conf-plugins-easyalign
+
+if !exists('g:easy_align_delimiters')
+  let g:easy_align_delimiters = {}
+endif
+let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
+let g:easy_align_delimiters['/'] = { 'pattern': '//', 'ignore_groups': ['String'] }
+let g:easy_align_delimiters[']'] = { 'pattern': '[[\]]', 'left_margin': 1, 'right_margin': 0, 'stick_to_left': 0 }
+let g:easy_align_delimiters[')'] = { 'pattern': '[()]', 'left_margin': 0, 'right_margin': 0, 'stick_to_left': 0 }
+let g:easy_align_delimiters['\'] = { 'pattern': '\\' }
+let g:easy_align_delimiters['%'] = { 'pattern': '%' }
+let g:easy_align_delimiters['-'] = { 'pattern': '-' }
+let g:easy_align_delimiters['['] = { 'pattern': '[' }
+let g:easy_align_delimiters['('] = { 'pattern': '(' }
+let g:easy_align_delimiters[':'] = { 'pattern': ':' }
+let g:easy_align_delimiters['?'] = { 'pattern': '?' }
+let g:easy_align_delimiters['|'] = { 'pattern': '|', 'ignore_groups': ['String'] }
+let g:easy_align_delimiters['"'] = { 'pattern': '"', 'ignore_groups': ['String'] }
+
+
+vnoremap <leader>ce :LiveEasyAlign<CR>
+nnoremap <leader>ce :LiveEasyAlign<CR>
+nnoremap <leader>c= :normal {v}<CR> :LiveEasyAlign<CR>
+nnoremap <leader>= <esc>vi{==
+
+
 runtime conf-plugins-sneak.vim
-runtime conf-plugins-tagbar.vim
-runtime conf-options.vim
+"""""""""""""""""""""""""""""" from conf-plugins-tagbar.vim
+
+" let g:tagbar_autopreview=1
+let g:tagbar_position='topleft vertical'
+let g:tagbar_width= winwidth(0)/2
+
+let g:tagbar_zoomwidth = 1
+let g:tagbar_indent = 4
+
+" nnoremap <leader>t :TagbarOpenAutoClose
+" nnoremap <C-\> :TagbarOpenAutoClose
+
+
+""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""" from conf-options.vim
+
+" Set Options Here
+" ----------------
+"
+"
+
+"behave mswin
+
+set autoread                         " Automatically reload a file when you select the buffer, if something else has modified it
+set whichwrap+=<,>,[,]               " Allow curser to wrap around to the next or previous line
+set backspace=indent,eol,start       " Allow backspacing over autoindent, line breaks, and past beggining of insert action
+set cmdheight=2                      " Less 'press <Enter> to continue'
+set confirm                          " Bring up a dialog asking if you want to save changes when actions which leave the buffer
+set cursorline                       " Highlight cursor line
+set expandtab                        " Spaces instead of tabs
+set foldlevelstart=99                " Start all the way folded
+set history=10000                    " number of commands to keep in history
+set ignorecase                       " Ignore make lowercase seaches case-insensitive
+set incsearch                        " Automatically jump to any results whil typing in search
+set lazyredraw                       " Don't showmacro actions, just update at the end for speed
+set more                             " Enable scrolling of long command output
+"set showmatch
+"set matchtime=5
+set hlsearch                         " Highlight search matches
+set laststatus=2                     " Always display the status line
+"set nobackup                         " Do not make a backup when overwriting a file
+set hidden                           " Let the buffer remain in memory when not visible
+"set nowritebackup                    " Do not write a backup when overwriting a file
+set number                           " Display line numbers
+set omnifunc=syntaxcomplete#Complete " Turn completion on
+set ruler                            " Display cursor position in the bottom right
+set scrolloff=10                     " Dislay 10 line above and below the cursor
+set shiftwidth=4                     " A tab is 4 spaces
+set sidescrolloff=10                 " Dislay 10 line to the left and right of the cursor
+"set smartcase                        " Make searches with any uppercase letters be case-sensitive
+set smarttab                         " Treat 4 spaces as if it was a tab
+set textwidth=0                      " Disable Forceful text line wrap
+set softtabstop=4                    " 4 spaces when i hit tab
+set tabstop=4                        " Interpret a tab as 4 spaces
+"set tags=/tags;./tags;/,tags;        " Is this optimal? maybe direct project root first, than tag back relay
+set tags=/tags;./tags;/,tags;        " Is this optimal? maybe direct project root first, than tag back relay
+set visualbell                       " Instead of beeping, induce seizures by screen flashing
+set undofile                         " Persistent undo, across sessions
+let &directory = stdpath("data") . '/swap'            " keep swap files in a special directory
+let &backupdir = stdpath("data") . '/backup'            " keep backup files in a special directory
+let &undodir   = stdpath("data") . '/undo'           " keep undo files in a special directory
+set linebreak                        " Visually wrap characters at the word boundary (the wrap that happens when you size a window to small)
+set gdefault                         " switch %s/{pattern}/{pattern} with %s/{pattern/{pattern}/g, since i never want to replace just the first match on each line. hopefully this won't mess with plugins
+set undolevels=50000                 " Save a lot of file changes for undo
+set undoreload=50000                " Save a lot of file reloads for undo
+set wrapscan
+set splitright                       " make vsplits happen to the right instead of left
+set splitbelow                       " make split happen below instead of above
+set wildmode=list:longest            " shell style completion
+set tw=0                             " don't chop lines at 78 characters
+set nomore                           "don't pause and display 'More'
+" this option is inserting an new line at the end of each paste... set clipboard^=unnamed               "use system clipboard
+set clipboard+=unnamedplus
+set virtualedit=""
+
+" set mouse=?
+
+"set background=dark " will modify backgrounds, which may have different color for dark and light
+"set nohidden " When I close a tab, remove the buffer
+"set noswapfile "do not make swapfiles, this would be nice, except it is also used to warn users of opening a file up twice in different windows
+"set shellslash "TODO
+
+" Note: you can view currently mapped keys with :map, :nmap:, inoremap, and etc
+" Note: vim lists all it's default keys and command in ":help index"
+let mapleader = ' '
+
+if 1
+  set foldenable        " enable folding
+  set foldmethod=syntax " fold based on syntax highlighting
+  set foldlevelstart=99 " start editing with all folds open
+  set fillchars=fold:\  " start editing with all folds open
+
+  " toggle folds
+  nnoremap <leader>f zA
+  vnoremap <leader>f zA
+
+  set foldtext=FoldText()
+  function! FoldText()
+      return '~'
+  endfun
+endif
+
+augroup GitCommit
+" Enable spell checking, which is not on by default for commit messages.
+autocmd FileType gitcommit setlocal spell
+" Reset textwidth if you've previously overridden it.
+autocmd FileType gitcommit setlocal textwidth=72
+augroup END
+
+
+""""""""""""""""""""""""""""""
+
 runtime conf-keys.vim
 runtime conf-tools.vim
 runtime conf-cmds.vim
 runtime local.vim
+
 
 
 cnoremap <C-a> <Home>
@@ -170,14 +502,28 @@ require('telescope').setup {
       theme = "dropdown",
       order_by = "asc",
       search_by = "title",
-      display_type = 'full' 
+      display_type = 'full'
     },
     file_browser = {
         -- use the "ivy" theme if you want
         theme = "ivy",
+    },
+    buffers = {
+        theme = "ivy",
+        sort_lastused = true,
+        --ignore_current_buffer = false,
+        sorter = require('telescope.sorters').get_substr_matcher(),
+        shorten_path = true,
+        --height = 10,
+        --layout_strategy = 'horizontal',
+        --layout_config = {preview_width = 0.65},
+        --show_all_buffers = true,
+        only_cwd = true,
+        color_devicons = true
     }
   }
 }
+require("telescope").load_extension "file_browser"
 
 vim.api.nvim_set_keymap(
         'n',
@@ -299,7 +645,8 @@ require('lualine').setup {
 
 
 
-
+require("nnn").setup({
+})
 
 
 
@@ -325,7 +672,7 @@ end
 
 -- convert viml to lua with %s/tnoremap\s*\([<>-a-zA-Z0-9]*\)\s*\(.*\)/tmap("\1", "\2")
 
-tmap("<Esc>",   [[<C-\><C-n>]])
+tmap("<C-Esc>",   [[<C-\><C-n>]])
 tmap("<C-h>",   [[<C-\><C-n>:wincmd h<CR>]])
 tmap("<C-j>",   [[<C-\><C-n>:wincmd j<CR>]])
 tmap("<C-k>",   [[<C-\><C-n>:wincmd k<CR>]])
@@ -345,6 +692,11 @@ nmap("<F11>",   [[:DiffviewOpen<CR>]])
 nmap("<S-F11>", [[:DiffviewClose<CR>]])
 -- nmap("<F12>",   [[:Flogsplit<CR>]])
 nmap("<F12>",    [[:FloatermNew cd %:h && lazygit<CR>]])
+
+nmap("<Del>",  [[:normal zz<CR>]])
+vmap("<Del>", [[<ESC>:normal zz<CR>]])
+-- seems like i use delete in insert mode....  imap("<Del>", [[<ESC>:normal zz<CR>]])
+nmap("<C-Del>",  [[:tabclose<CR>]])
 
 
 
@@ -470,9 +822,18 @@ nmap("<leader>yb", [[:Telescope git_branches<CR>]])
 nmap("<leader>ys", [[:Telescope git_status<CR>]])
 nmap("<leader>yc", [[:Telescope git_commits<CR>]])
 
+nmap("<leader>ts", [[:Telescope lsp_document_symbols<CR>]])
+nmap("<leader>th", [[:Telescope lsp_document_symbols<CR>]])
+nmap("<leader>th", [[:Telescope help_tags<CR>]])
+nmap("<leader>m", [[:Telescope old_files<CR>]])
+nmap("<leader>o", [[:Telescope lsp_document_symbols<CR>]])
+
+nmap("<leader>e",  [[:Files file_browser<CR>]])
+
 nmap("<Leader>k", [[:copen<CR>]])
 nmap("<leader>z", [[:quit<CR>]])
 nmap("<leader>x", [[:tabclose<CR>]])
+
 
 
 
@@ -529,6 +890,42 @@ vim.opt.gdefault  =  true                              -- %s will replace all ma
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ------
 --"vim.opt.showmatch = true
 --"vim.opt.matchtime=5
@@ -536,9 +933,78 @@ vim.opt.gdefault  =  true                              -- %s will replace all ma
 --"vim.opt.writebackup = false                    " Do not write a backup when overwriting a file
 --"set smartcase                        " Make searches with any uppercase letters be case-sensitive
 
+require("symbols-outline").setup({})
+local jdtls = require('jdtls')
 
+-- File types that signify a Java project's root directory. This will be
+-- used by eclipse to determine what constitutes a workspace
+local root_markers = {'gradlew', 'mvnw', '.git'}
+local root_dir = require('jdtls.setup').find_root(root_markers)
+
+
+
+
+------ disable netrw at the very start of your init.lua
+----vim.g.loaded_netrw = 1
+----vim.g.loaded_netrwPlugin = 1
+------ set termguicolors to enable highlight groups
+----vim.opt.termguicolors = true
+----
+------ empty setup using defaults
+----require("nvim-tree").setup()
 
 EOF
+
+"""""""""""""""""""""""""""""" from tools.vim
+"nnoremap <leader>r :Files<CR>
+nnoremap <leader>r :Telescope find_files<CR>
+
+nnoremap <leader>ac :exec 'Ag ' . expand('<cword>')<CR>
+nnoremap <expr> <leader>av ':vimgrep' . ' ' . expand('<cword>') . ' ' . '..\' 
+nnoremap <leader>ai :Ag 
+" nnoremap <leader>p :BuildBuild<CR>
+" nnoremap <leader>P :ProjectWindow<CR>
+"nnoremap <leader>P :BuildGtags<CR>
+" nnoremap <leader>E :ProjectOpenFile<CR>
+nnoremap <leader>l :BLines<CR>
+nnoremap <leader>L :Lines<CR>
+" nnoremap <leader>w :Windows<CR>
+" nnoremap <leader>m :History<CR>
+nnoremap <leader>h :History:<CR>
+nnoremap <leader>H :History/<CR>
+
+" nnoremap <leader>e :Files %:h<CR>
+"nnoremap <leader>k :Windows<CR>
+" nnoremap <leader>o :BTags<CR>
+" nnoremap <leader>j :Buffer<CR>
+nnoremap <leader>j :Telescope buffers<CR>
+
+""""""""""""""""""""""""""""""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 augroup Build
